@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Date Info</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS variables for easy theme switching */
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg-color: #2b2b2b;
+            --text-color: #e0e0e0;
+            --heading-color: #a0a0a0;
+            --accent-color: #6a8dff;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f7f7f7;
+            --card-bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --heading-color: #6b7280;
+            --accent-color: #4f46e5;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            flex-grow: 1;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            min-width: 150px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .card h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--heading-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card .value {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text-color);
+        }
+
+        .card .value.month-name {
+            font-size: 2.5rem; /* Slightly smaller for longer text */
+        }
+        
+        /* Specific styling for the main card */
+        .card.primary {
+            background: linear-gradient(135deg, var(--accent-color), #8daaff);
+             color: white;
+        }
+        
+        [data-theme="light"] .card.primary {
+             background: linear-gradient(135deg, var(--accent-color), #818cf8);
+        }
+
+        .card.primary h2 {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .card.primary .value {
+            color: white;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 500px) {
+            .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Card for Week Number -->
+        <div class="card primary">
+            <h2>Week</h2>
+            <p class="value" id="week-number">35</p>
+        </div>
+
+        <!-- Card for Month Name -->
+        <div class="card">
+            <h2>Month</h2>
+            <p class="value month-name" id="month-name">August</p>
+        </div>
+
+        <!-- Card for Month Number -->
+        <div class="card">
+            <h2>Month #</h2>
+            <p class="value" id="month-number">08</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Calculates the ISO 8601 week number for a given date.
+         * This logic matches Notion's week number calculation.
+         * Weeks start on Monday. Week 1 is the first week with a Thursday.
+         * @param {Date} date The date to calculate the week number for.
+         * @returns {number} The ISO 8601 week number.
+         */
+        function getNotionWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            // Set to nearest Thursday: current date + 4 - current day number
+            // Sunday is 0, so we use ((d.getUTCDay() + 6) % 7) to make Monday 0.
+            d.setUTCDate(d.getUTCDate() + 4 - ((d.getUTCDay() + 6) % 7));
+            // Get first day of year
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            // Calculate full weeks to nearest Thursday
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return weekNo;
+        }
+
+        // Function to update the date values on the page
+        function updateDateInfo() {
+            const now = new Date();
+
+            // Get month name (e.g., "August")
+            const monthName = now.toLocaleString('default', { month: 'long' });
+            
+            // Get month number (e.g., 8) and pad with a leading zero if needed
+            const monthNumber = (now.getMonth() + 1).toString().padStart(2, '0');
+            
+            // Get the Notion-compatible week number
+            const weekNumber = getNotionWeekNumber(now);
+
+            // Update the HTML elements
+            document.getElementById('week-number').textContent = weekNumber;
+            document.getElementById('month-name').textContent = monthName;
+            document.getElementById('month-number').textContent = monthNumber;
+        }
+        
+        // Function to handle theme switching based on URL parameter
+        function applyTheme() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const theme = urlParams.get('theme'); // ?theme=light
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // Run the functions when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            updateDateInfo();
+        });
+    </script>
+
+</body>
+</html>
