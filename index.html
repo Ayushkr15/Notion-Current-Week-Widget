@@ -1,169 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Current Date Info</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #1a1a1a;
-            --card-bg-color: #2c2c2c;
-            --text-color: #e0e0e0;
-            --heading-color: #888888;
-            --accent-gradient: linear-gradient(90deg, #6a8dff, #8daaff, #a1c4fd, #6a8dff);
-            --shadow-color: rgba(0, 0, 0, 0.2);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Center Date Widget</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #1a1a1a;
+      --card-dark: #2a2a2a;
+      --text-dark: #ffffff;
+      --accent-dark: linear-gradient(135deg, #6a8dff, #8daaff);
 
-        [data-theme="light"] {
-            --bg-color: #f7f7f7;
-            --card-bg-color: #ffffff;
-            --text-color: #1a1a1a;
-            --heading-color: #6b7280;
-            --accent-gradient: linear-gradient(90deg, #4f46e5, #818cf8, #a5b4fc, #4f46e5);
-            --shadow-color: rgba(0, 0, 0, 0.05);
-        }
+      --bg-light: #f9fafb;
+      --card-light: #ffffff;
+      --text-light: #1f2937;
+      --accent-light: linear-gradient(135deg, #4f46e5, #818cf8);
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 1rem;
-            box-sizing: border-box;
-        }
+      --shadow: 0 6px 20px rgba(0,0,0,0.15);
+      --radius: 14px;
+    }
 
-        .container {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 0.75rem;
-            width: 100%;
-            max-width: 450px;
-            background-color: var(--card-bg-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px var(--shadow-color);
-        }
+    [data-theme="dark"] {
+      --bg: var(--bg-dark);
+      --card: var(--card-dark);
+      --text: var(--text-dark);
+      --accent: var(--accent-dark);
+    }
 
-        .card {
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-        }
+    [data-theme="light"] {
+      --bg: var(--bg-light);
+      --card: var(--card-light);
+      --text: var(--text-light);
+      --accent: var(--accent-light);
+    }
 
-        .card h2 {
-            margin: 0 0 0.25rem 0;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--heading-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: transparent;
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-        .card .value {
-            font-size: 2.25rem;
-            font-weight: 700;
-            line-height: 1.2;
-            color: var(--text-color);
-        }
-        
-        .card-week {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
-            background: var(--accent-gradient);
-            background-size: 200% 100%;
-            animation: gradient-animation 10s ease infinite;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      width: 380px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
 
-        .card-week h2 {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        .card-week .value {
-            color: white;
-            font-size: 4rem;
-        }
-        
-        .card-month, .card-year {
-            background-color: var(--bg-color);
-        }
-        
-        .card-month .value {
-            font-size: 1.75rem;
-        }
-        
-        .card-year .value {
-            font-size: 1.75rem;
-        }
+    .container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
 
-    </style>
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      margin: 0 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      transform: scale(1.05);
+    }
+
+    .section h2 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      margin: 0 0 0.25rem 0;
+      transition: color 0.3s ease;
+    }
+
+    .section:hover h2 {
+      color: var(--text);
+    }
+
+    .section p {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+      transition: color 0.3s ease;
+    }
+
+    .highlight {
+      background: var(--accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 6s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .divider {
+      width: 1px;
+      height: 50px;
+      background: rgba(150,150,150,0.2);
+    }
+
+    .time {
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card card-week">
-            <h2>Current Week</h2>
-            <p class="value" id="week-number">35</p>
-        </div>
-        <div class="card card-month">
-            <h2>Month</h2>
-            <p class="value" id="month-name">August</p>
-        </div>
-        <div class="card card-year">
-            <h2>Year</h2>
-            <p class="value" id="year">2025</p>
-        </div>
+  <div class="container" id="date-widget">
+    <div class="section">
+      <h2>Week</h2>
+      <p class="highlight" id="week-number">--</p>
     </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h2>Month</h2>
+      <p id="month-name">--</p>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h2>Year</h2>
+      <p id="year">--</p>
+    </div>
+  </div>
 
-    <script>
-        function getNotionWeekNumber(date) {
-            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-            d.setUTCDate(d.getUTCDate() + 4 - ((d.getUTCDay() + 6) % 7));
-            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-            return weekNo;
-        }
+  <script>
+    function getWeekNumber(date) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - ((d.getUTCDay() + 6) % 7));
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
 
-        function updateDateInfo() {
-            const now = new Date();
-            const monthName = now.toLocaleString('default', { month: 'long' });
-            const year = now.getFullYear();
-            const weekNumber = getNotionWeekNumber(now);
+    function updateWidget() {
+      const now = new Date();
+      document.getElementById('week-number').textContent = getWeekNumber(now);
+      document.getElementById('month-name').textContent = now.toLocaleString('default', { month: 'long' });
+      document.getElementById('year').textContent = now.getFullYear();
+    }
 
-            document.getElementById('week-number').textContent = weekNumber;
-            document.getElementById('month-name').textContent = monthName;
-            document.getElementById('year').textContent = year;
-        }
-        
-        function applyTheme() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('theme') === 'light') {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        }
+    function detectTheme() {
+      const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTheme();
-            updateDateInfo();
-        });
-    </script>
-
+    detectTheme();
+    updateWidget();
+  </script>
 </body>
 </html>
